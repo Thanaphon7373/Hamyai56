@@ -1,0 +1,47 @@
+-- โหลด Rayfield Library
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- สร้างหน้าต่าง UI
+local Window = Rayfield:CreateWindow({
+   Name = "Galaxy Block Hub",
+   LoadingTitle = "กำลังโหลด...",
+   LoadingSubtitle = "by Friend",
+   ConfigurationSaving = {
+      Enabled = false
+   },
+   Discord = {
+      Enabled = false
+   },
+   KeySystem = false
+})
+
+-- สร้าง Tab หลัก
+local MainTab = Window:CreateTab("Main", 4483362458)
+
+-- ตัวแปรควบคุม Loop
+local autoSpawn = false
+
+-- สวิตช์ Toggle เปิด/ปิด
+local Toggle = MainTab:CreateToggle({
+   Name = "Auto Spawn Galaxy Block",
+   CurrentValue = false,
+   Flag = "AutoGalaxyBlock",
+   Callback = function(Value)
+      autoSpawn = Value
+      
+      if autoSpawn then
+         task.spawn(function()
+            while autoSpawn do
+               -- ดึง ReplicatedStorage แล้ว FireServer
+               local event = game:GetService("ReplicatedStorage"):FindFirstChild("SpawnGalaxyBlock")
+               if event then
+                  event:FireServer()
+               end
+               
+               -- ดีเลย์ยิง Event (ปรับเลขได้ตามใจชอบ เช่น 0.1 หรือ 0.5)
+               task.wait(0.1)
+            end
+         end)
+      end
+   end,
+})
